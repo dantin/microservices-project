@@ -1,0 +1,57 @@
+buildscript {
+    ext {
+        // SpringCloud Release train Compatibility with SpringBoot can be found at:
+        // https://spring.io/projects/spring-cloud
+        springBootVersion = '2.0.9.RELEASE'
+        springCloudVersion = 'Finchley.RELEASE'
+        // Due to Gradle's dependency resolution rules and the lack of a parent bom feature, depending on
+        // 'spring-cloud-starter-netflix-eureka-server' can cause failures on application startup.
+        // See: https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-eureka-server.html
+        // for more detail.
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+    baseName = 'discovery-server'
+    version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    //jcenter()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    compile("org.springframework.boot:spring-boot-starter-undertow")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server") {
+        exclude(module: 'servlet-api') // Drags in an old 2.5 spec...
+    }
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
