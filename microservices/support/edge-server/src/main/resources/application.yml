@@ -1,0 +1,24 @@
+info:
+  component: Zuul Server
+
+endpoint:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+zuul:
+  ignored-services: "*"
+  routes:
+    productcomposite:
+      path: /productcomposite/**
+
+server:
+  port: 8765
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: INFO
