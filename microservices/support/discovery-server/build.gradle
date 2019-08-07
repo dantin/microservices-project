@@ -3,19 +3,23 @@ buildscript {
         // SpringCloud Release train Compatibility with SpringBoot can be found at:
         // https://spring.io/projects/spring-cloud
         springBootVersion = '2.0.9.RELEASE'
+        springBootDependencyManagementPluginVersion = '1.0.8.RELEASE'
         springCloudVersion = 'Finchley.RELEASE'
-        // Due to Gradle's dependency resolution rules and the lack of a parent bom feature, depending on
-        // 'spring-cloud-starter-netflix-eureka-server' can cause failures on application startup.
-        // See: https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-eureka-server.html
-        // for more detail.
     }
     repositories {
         mavenCentral()
         jcenter()
     }
     dependencies {
+        // Due to Gradle's dependency resolution rules and the lack of a parent bom feature, depending on
+        // 'spring-cloud-starter-netflix-eureka-server' can cause failures on application startup.
+        // See: https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-eureka-server.html
+        // for more detail.
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE")
+        // For SpringBoot 1.x, it used to apply the dependency management plugin automatically.
+        // But since SpringBoot 2.x, we need to apply it explicitly in our build.gradle
+        // See: https://baeldung.com/spring-boot-gradle-plugin
+        classpath("io.spring.gradle:dependency-management-plugin:${springBootDependencyManagementPluginVersion}")
     }
 }
 
@@ -23,6 +27,12 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
 
 jar {
     baseName = 'discovery-server'
@@ -34,7 +44,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    //jcenter()
+    jcenter()
 }
 
 dependencies {
@@ -48,10 +58,4 @@ dependencies {
     }
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
 }
