@@ -35,8 +35,11 @@ repositories {
 }
 
 jar {
-    baseName = 'review-service'
-    version = '0.0.1-SNAPSHOT'
+    enabled = true
+}
+
+bootJar {
+    classifier = 'boot'
 }
 
 publishing {
@@ -48,6 +51,10 @@ publishing {
 
             from components.java
         }
+    }
+
+    repositories {
+        mavenLocal()
     }
 }
 
