@@ -27,7 +27,7 @@ public class ReviewService {
             @RequestParam(value = "productId", required = true) int productId) {
 
         int interval = setProcTimeBean.calculateProcessingTime();
-        LOG.info("/recommendation called, processing time: {} ms", interval);
+        LOG.info("/review called, processing time: {} ms", interval);
 
         sleep(interval);
 
@@ -36,7 +36,7 @@ public class ReviewService {
                 new Review(productId, 2, "Author 2", "Subject 2", "Content 2"),
                 new Review(productId, 3, "Author 3", "Subject 3", "Content 3"));
 
-        LOG.info("/recommendation response size: {}", list.size());
+        LOG.info("/review response size: {}", list.size());
 
         return list;
     }
