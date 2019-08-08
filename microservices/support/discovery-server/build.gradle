@@ -42,6 +42,13 @@ jar {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+}
+
 repositories {
     mavenCentral()
     jcenter()
