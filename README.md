@@ -5,8 +5,10 @@ Microservices Project shows how to implement microservcie project using [Spring 
 
 ### Components
 
-| Components                        | Solution       |
-|-----------------------------------|----------------|
-| Service Discovery                 | Netflix Eureka |
-| Dynamic Routing and Load Balancer | Netflix Ribbon |
-| Edge Server                       | Netflix Zuul   |
+| Components                        | Tech Stack                         |
+|-----------------------------------|------------------------------------|
+| Service Discovery                 | Netflix Eureka                     |
+| Dynamic Routing and Load Balancer | Netflix Ribbon                     |
+| Edge Server                       | Netflix Zuul                       |
+| Circuit Breaker                   | Netflix Hystrix Dashboard, Turbine |
+| Edge Server                       | Netflix Zuul                       |
