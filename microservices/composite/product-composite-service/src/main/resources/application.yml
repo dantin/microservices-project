@@ -11,3 +11,9 @@ eureka:
 logging:
   level:
     com.github.dantin: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream

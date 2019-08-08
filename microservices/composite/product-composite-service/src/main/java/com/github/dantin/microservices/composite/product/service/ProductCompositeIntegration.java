@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.github.dantin.microservices.core.product.model.Product;
 import com.github.dantin.microservices.core.recommendation.model.Recommendation;
 import com.github.dantin.microservices.core.review.model.Review;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -35,6 +37,7 @@ public class ProductCompositeIntegration {
      * @param productId product id
      * @return product entity
      */
+    @HystrixCommand(fallbackMethod = "defaultProduct")
     public ResponseEntity<Product> getProduct(int productId) {
 
         URI uri = util.getServiceUrl("product", "http://localhost:8081/product");
@@ -48,6 +51,11 @@ public class ProductCompositeIntegration {
         Product product = response2Product(responseStr);
 
         return util.createOkResponse(product);
+    }
+
+    public ResponseEntity<Product> defaultProduct(int id) {
+        LOG.warn("using fallback method for product-service");
+        return util.createResponse(null, HttpStatus.BAD_GATEWAY);
     }
 
     private ObjectReader productReader = null;
@@ -74,6 +82,7 @@ public class ProductCompositeIntegration {
      * @param productId product id
      * @return recommendation list
      */
+    @HystrixCommand(fallbackMethod = "defaultRecommendation")
     public ResponseEntity<List<Recommendation>> getRecommendations(int productId) {
         try {
             LOG.info("get recommendations...");
@@ -94,6 +103,11 @@ public class ProductCompositeIntegration {
             LOG.error("get recommendations error", t);
             throw t;
         }
+    }
+
+    public ResponseEntity<List<Recommendation>> defaultRecommendation(int id) {
+        LOG.warn("using fallback method for recommendation-service");
+        return util.createResponse(null, HttpStatus.BAD_GATEWAY);
     }
 
     private List<Recommendation> response2Recommendations(ResponseEntity<String> response) {
@@ -118,6 +132,7 @@ public class ProductCompositeIntegration {
      * @param productId product id
      * @return review list
      */
+    @HystrixCommand(fallbackMethod = "defaultReview")
     public ResponseEntity<List<Review>> getReviews(int productId) {
         LOG.info("get reviews...");
 
@@ -133,6 +148,11 @@ public class ProductCompositeIntegration {
         LOG.debug("get reviews count: {}", reviews.size());
 
         return util.createOkResponse(reviews);
+    }
+
+    public ResponseEntity<List<Review>> defaultReview(int id) {
+        LOG.warn("using fallback method for review-service");
+        return util.createResponse(null, HttpStatus.BAD_GATEWAY);
     }
 
     private List<Review> response2Reviews(ResponseEntity<String> response) {
