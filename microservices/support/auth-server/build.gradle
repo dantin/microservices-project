@@ -1,0 +1,63 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.9.RELEASE'
+        springBootDependencyManagementPluginVersion = '1.0.8.RELEASE'
+        springCloudVersion = 'Finchley.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${springBootDependencyManagementPluginVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+jar {
+    baseName = 'auth-server'
+    version = '0.0.1-SNAPSHOT'
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    compile("org.springframework.boot:spring-boot-starter-undertow")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-security")
+
+    compile("org.springframework.cloud:spring-cloud-starter-oauth2")
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+wrapper {
+    gradleVersion = '5.5.1'
+}
