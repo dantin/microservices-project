@@ -10,5 +10,5 @@ Microservices Project shows how to implement microservcie project using [Spring 
 | Service Discovery                 | Netflix Eureka                     |
 | Dynamic Routing and Load Balancer | Netflix Ribbon                     |
 | Edge Server                       | Netflix Zuul                       |
-| Circuit Breaker                   | Netflix Hystrix Dashboard, Turbine |
-| Edge Server                       | Netflix Zuul                       |
+| Circuit Breaker                   | Netflix Hystrix                    |
+| Monitoring                        | Netflix Hystrix Dashboard, Turbine |
