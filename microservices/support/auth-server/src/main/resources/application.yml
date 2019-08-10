@@ -3,10 +3,16 @@ server:
   servlet:
     context-path: /uaa
 
-spring:
-  security:
-    user:
-      password: password
+security:
+  oauth2:
+    client:
+      id: acme
+      client-id: acme
+      client-secret: acmesecret
+      user-authorization-uri: http://localhost:9999/uaa/oauth/authorize
+      access-token-uri: http://localhost:9999/uaa/oauth/token
+      grant-type: client_credentials
+      scope: webshop
 
 logging:
   level:
