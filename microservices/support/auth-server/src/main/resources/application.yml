@@ -3,17 +3,6 @@ server:
   servlet:
     context-path: /uaa
 
-security:
-  oauth2:
-    client:
-      id: acme
-      client-id: acme
-      client-secret: acmesecret
-      user-authorization-uri: http://localhost:9999/uaa/oauth/authorize
-      access-token-uri: http://localhost:9999/uaa/oauth/token
-      grant-type: client_credentials
-      scope: webshop
-
 logging:
   level:
     org.springframework.security: DEBUG
