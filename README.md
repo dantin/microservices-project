@@ -12,3 +12,4 @@ Microservices Project shows how to implement microservcie project using [Spring 
 | Edge Server                       | Netflix Zuul                       |
 | Circuit Breaker                   | Netflix Hystrix                    |
 | Monitoring                        | Netflix Hystrix Dashboard, Turbine |
+| OAuth 2.0                         | Spring Cloud Security              |

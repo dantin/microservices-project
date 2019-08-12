@@ -61,3 +61,59 @@ Using benchmark:
 Circuit breaker status changes to __Open__.
 
 Statup `review-service` and keep benching, see how the circuit breaker change from __Open__ to __Closed__.
+
+
+### Spring Security, OAuth2.0
+
+Boot sequence: Discovery(Eureka), Athentication Server(auth), Core Services(product/recommendation/review), Composite Service(product-composite), API Service(product-api), Edge Server(Zuul), Monitoring(monitor-board)
+
+    $ ./gradlew bootRun
+
+#### Authentication Code
+
+Authentication code grant by Resource Owner:
+
+Browser: `http://localhost:9999/oauth/authorize?response_type=code&client_id=acme&redirect_uri=http://example.com&scope=webshop&state=97536`
+
+Get Access Token:
+
+    $ CODE=zzjxzD
+    $ curl acme:acmesecret@localhost:9999/uaa/oauth/token \
+     -d grant_type=authorization_code \
+     -d client_id=acme \
+     -d redirect_uri=http://example.com \
+     -d code=$CODE -s
+
+Use Token to Access API:
+
+    $ TOKEN=039a1ac1-d747-4d2a-ac7e-06de3af4a293
+    $ curl 'http://localhost:8765/api/product/12' -H "Authorization: Bearer $TOKEN" -s
+
+Let’s make a second attempt to get an access token for the same code. It should fail, e.g. the code is actually working as a _one time_ password:
+
+    $ curl acme:acmesecret@localhost:9999/uaa/oauth/token \
+     -d grant_type=authorization_code \
+     -d client_id=acme \
+     -d redirect_uri=http://example.com \
+     -d code=$CODE -s
+
+#### Implicit
+
+Implicit grant:
+
+Browser: `http://localhost:9999/oauth/authorize?response_type=token&client_id=acme&redirect_uri=http://example.com&scope=webshop&state=48532`
+
+Access API
+
+Without an access token, will fail:
+
+    $ curl 'http://localhost:8765/api/product/123' -s | jq .
+
+Try with a invalid access token, it should fail as well:
+
+    $ curl 'http://localhost:8765/api/product/123' \
+       -H  "Authorization: Bearer invalid-access-token" -s | jq .
+
+Let's invalidate the access token, e.g. simulating that it has expired, call will fail.
+
+    $ curl 'http://localhost:8765/api/product/12' -H "Authorization: Bearer $TOKEN" -s | jq .
