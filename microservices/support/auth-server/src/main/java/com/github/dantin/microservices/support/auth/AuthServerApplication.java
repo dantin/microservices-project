@@ -74,7 +74,7 @@ public class AuthServerApplication {
             // NOTE: secret密码配置从 Spring Security 5.0开始必须以 {bcrypt}+加密后的密码 这种格式填写;
             clients.inMemory()
                     .withClient("acme")
-                    .authorizedGrantTypes("authorization_code", "refresh_token")
+                    .authorizedGrantTypes("authorization_code", "refresh_token", "password")
                     .scopes("webshop")
                     .secret(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("acmesecret"));
         }
