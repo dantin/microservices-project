@@ -1,7 +1,17 @@
 server:
   port: 9999
-  servlet:
-    context-path: /uaa
+
+eureka:
+  client:
+    # Specify an arbitrary string indicating the region, can be override as a '-D' option, e.g. -Deureka.region=us-east-1
+    region: default
+    service-url:
+      default-zone: http://user:${eureka.password}@127.0.0.1:8761/eureka/
+
+  instance:
+    instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
+    # Virtual host name by which the clients identifies this server.
+    virtual-host-name: ${spring.application.name}
 
 logging:
   level:
