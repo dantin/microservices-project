@@ -1,0 +1,30 @@
+server:
+  port: 0
+
+auth-server-url: http://localhost:9999/uaa
+
+security:
+  oauth2:
+    client:
+      client-id: acme
+      client-secret: acmesecret
+      scope: webshop
+      access-token-uri: ${auth-server-url}/oauth/token
+      user-authorization-uri: ${auth-server-url}/oauth/authorize
+    resource:
+      token-info-uri: ${auth-server-url}/oauth/check_token
+
+management:
+  security:
+    enabled: false
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
+  client:
+    registry-fetch-interval-seconds: 5
+
+logging:
+  level:
+    com.github.dantin: INFO

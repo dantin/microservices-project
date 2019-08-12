@@ -1,0 +1,8 @@
+auth-server-url: http://localhost:9999/uaa
+
+spring:
+  application:
+    name: productapi
+  cloud:
+    config:
+      uri: ${vcap.services.${PREFIX:}configserver.credentials.uri:http://user:password@localhost:8888}
