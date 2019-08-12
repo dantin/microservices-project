@@ -26,12 +26,6 @@ public class ProductApiService {
         this.loadBalancer = loadBalancer;
     }
 
-    @GetMapping("/user")
-    public Authentication getUser(Authentication authentication) {
-        LOG.info("resource: user={}", authentication);
-        return authentication;
-    }
-
     @RequestMapping("/{productId}")
     @HystrixCommand(fallbackMethod = "defaultProductComposite")
     public ResponseEntity<String> getProductComposite(
