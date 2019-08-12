@@ -12,12 +12,36 @@ endpoint:
 zuul:
   ignored-services: "*"
   prefix: /api
+  add-proxy-headers: true
   routes:
-    productapi: /product/**
+    product:
+      path: /product/**
+      service-id: productapi
+      sensitive-headers: "*"
+    auth:
+      path: /auth/**
+      service-id: authserver
+      sensitive-headers: "*"
+
+security:
+  oauth2:
+    client:
+      client-id: acme
+      scope: webshop
+      access-token-uri: http://localhost:${server.port}/auth/oauth/token
+      user-authorization-uri: http://localhost:${server.port}/auth/oauth/authorize
+    resource:
+      user-info-uri: http://localhost:${server.port}/auth/api/member
+      prefer-token-info: false
 
 eureka:
+  client:
+    region: default
+    service-url:
+      default-zone: http://user:${eureka.password}@127.0.0.1:8761/eureka/
   instance:
     instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
+    virtual-host-name: ${spring.application.name}
 
 server:
   port: 8765
