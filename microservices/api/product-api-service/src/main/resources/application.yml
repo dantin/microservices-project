@@ -1,7 +1,7 @@
 server:
   port: 0
 
-auth-server-url: http://localhost:9999/uaa
+gateway-port: 8765
 
 security:
   oauth2:
@@ -9,10 +9,11 @@ security:
       client-id: acme
       client-secret: acmesecret
       scope: webshop
-      access-token-uri: ${auth-server-url}/oauth/token
-      user-authorization-uri: ${auth-server-url}/oauth/authorize
+      access-token-uri: http://localhost:${gateway-port}/api/auth/oauth/token
+      user-authorization-uri: http://localhost:${gateway-port}/api/auth/oauth/authorize
     resource:
-      token-info-uri: ${auth-server-url}/oauth/check_token
+      user-info-uri: http://localhost:${gateway-port}/api/auth/api/member
+      prefer-token-info: false
 
 management:
   security:
