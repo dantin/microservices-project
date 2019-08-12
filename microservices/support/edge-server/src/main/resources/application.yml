@@ -11,9 +11,9 @@ endpoint:
 
 zuul:
   ignored-services: "*"
+  prefix: /api
   routes:
-    productcomposite:
-      path: /productcomposite/**
+    productapi: /product/**
 
 eureka:
   instance:
