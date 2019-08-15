@@ -16,7 +16,7 @@ package:
 	@for subdir in $(PACKAGES); \
 		do \
 		m=`echo $$subdir | cut -d/ -f 3`; \
-		echo "clean module $$m..."; \
+		echo "publish module $$m to Maven..."; \
 		make -f $(SOURCE_DIR)/Makefile.template -C $(SOURCE_DIR)/$$subdir clean; \
 		done
 
