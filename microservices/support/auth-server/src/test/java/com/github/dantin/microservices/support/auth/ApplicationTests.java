@@ -10,10 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(value = {"eureka.client.enabled:false"}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ApplicationTests {
 
     @LocalServerPort
@@ -23,26 +22,20 @@ public class ApplicationTests {
 
     @Test
     public void homePageProtected() {
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/uaa/", String.class);
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        String auth = response.getHeaders().getFirst("WWW-Authenticate");
-        assertTrue("Wrong header: " + auth, auth.startsWith("Bearer realm=\""));
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/", String.class);
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
     }
 
     @Test
     public void userEndpointProtected() {
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/uaa/endpoint", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/api/member", String.class);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        String auth = response.getHeaders().getFirst("WWW-Authenticate");
-        assertTrue("Wrong header: " + auth, auth.startsWith("Bearer realm=\""));
     }
 
     @Test
     public void authorizationRedirects() {
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/uaa/oauth/authorize", String.class);
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        String auth = response.getHeaders().getFirst("WWW-Authenticate");
-        assertTrue("Wrong header: " + auth, auth.startsWith("Bearer realm=\""));
+        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/oauth/authorize", String.class);
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
     }
 
 }
