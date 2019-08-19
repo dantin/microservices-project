@@ -1,0 +1,12 @@
+
+.PHONY: clean
+clean:
+	./gradlew clean
+
+.PHONY: package
+package:
+	./gradlew publishToMavenLocal
+
+.PHONY: build
+build:
+	./gradlew build
