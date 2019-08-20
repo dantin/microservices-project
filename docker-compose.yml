@@ -2,14 +2,12 @@ version: '3.5'
 
 services:
   discovery-server:
-    hostname: discovery-server
     restart: always
     image: dantin/discovery-server:latest
     command: java -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=docker -jar app.jar
     ports:
       - 8761:8761
   auth-server:
-    hostname: auth-server
     restart: always
     image: dantin/auth-server:latest
     ports:
@@ -17,3 +15,13 @@ services:
     command: java -Dspring.profiles.active=docker -jar app.jar
     links:
       - "discovery-server"
+    depends_on:
+      - discovery-server
+  product-service:
+    restart: always
+    image: dantin/product-service:latest
+    command: java -Dspring.profiles.active=docker -jar app.jar
+    links:
+      - "discovery-server"
+    depends_on:
+      - discovery-server
