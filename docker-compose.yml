@@ -33,3 +33,11 @@ services:
       - "discovery-server"
     depends_on:
       - discovery-server
+  review-service:
+    restart: always
+    image: dantin/review-service:latest
+    command: java -Dspring.profiles.active=docker -jar app.jar
+    links:
+      - "discovery-server"
+    depends_on:
+      - discovery-server
