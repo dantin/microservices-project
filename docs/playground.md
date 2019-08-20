@@ -117,3 +117,7 @@ Try with a invalid access token, it should fail as well:
 Let's invalidate the access token, e.g. simulating that it has expired, call will fail.
 
     $ curl 'http://localhost:8765/api/product/12' -H "Authorization: Bearer $TOKEN" -s | jq .
+
+Using `ab` with token:
+
+    $ ab -n 30 -c 5 -H "Authorization: Bearer $TOKEN" http://localhost:8765/api/product/12
