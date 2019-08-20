@@ -65,3 +65,17 @@ services:
     depends_on:
       - discovery-server
       - product-composite-service
+  edge-server:
+    restart: always
+    image: dantin/edge-server:latest
+    command: java -Dspring.profiles.active=docker -jar app.jar
+    ports:
+      - 8765:8765
+    links:
+      - "discovery-server"
+      - "product-api-service"
+      - "auth-server"
+    depends_on:
+      - discovery-server
+      - product-api-service
+      - auth-server
