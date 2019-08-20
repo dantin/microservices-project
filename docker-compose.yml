@@ -25,3 +25,11 @@ services:
       - "discovery-server"
     depends_on:
       - discovery-server
+  recommendation-service:
+    restart: always
+    image: dantin/recommendation-service:latest
+    command: java -Dspring.profiles.active=docker -jar app.jar
+    links:
+      - "discovery-server"
+    depends_on:
+      - discovery-server

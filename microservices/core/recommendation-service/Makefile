@@ -4,4 +4,4 @@ include $(ROOT_DIR)/makefile.include
 
 .PHONY: docker
 docker: build
-	docker build --force-rm -t dantin/product-composite-service .
+	docker build --force-rm -t dantin/recommendation-service .
