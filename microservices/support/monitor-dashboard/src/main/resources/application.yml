@@ -8,15 +8,27 @@ logging:
 eureka:
   client:
     # Specify an arbitrary string indicating the region, can be override as a '-D' option, e.g. -Deureka.region=us-east-1
-    region: default
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 5
     service-url:
-      default-zone: http://user:${eureka.password}@127.0.0.1:8761/eureka/
-
+      defaultZone: http://user:${eureka.password}@127.0.0.1:8761/eureka/
   instance:
     instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
-    # Virtual host name by which the clients identifies this server.
-    virtual-host-name: ${spring.application.name}
+  password: ${SECURITY_USER_PASSWORD:password}
 
 turbine:
   app-config: productcomposite
   cluster-name-expression: new String("default")
+
+---
+# For development in Docker containers
+spring:
+  profiles: docker
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://user:${eureka.password}@discovery-server:8761/eureka/

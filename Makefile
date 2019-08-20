@@ -17,7 +17,17 @@ package:
 		do \
 		m=`echo $$subdir | cut -d/ -f 3`; \
 		echo "publish module $$m to Maven..."; \
-		make -f $(SOURCE_DIR)/Makefile.template -C $(SOURCE_DIR)/$$subdir clean; \
+		make -C $(SOURCE_DIR)/$$subdir package; \
+		done
+
+.PHONY: docker
+docker:
+	@echo "build docker image"
+	@for subdir in $(MODULES); \
+		do \
+		m=`echo $$subdir | cut -d/ -f 3`; \
+		echo "build docker image for $$m..."; \
+		make -C $(SOURCE_DIR)/$$subdir docker; \
 		done
 
 .PHONY: archive
@@ -43,8 +53,18 @@ clean:
 		do \
 		m=`echo $$subdir | cut -d/ -f 3`; \
 		echo "clean module $$m..."; \
-		make -f $(SOURCE_DIR)/Makefile.template -C $(SOURCE_DIR)/$$subdir clean; \
+		make -C $(SOURCE_DIR)/$$subdir clean; \
 		done
 	@echo "clean IDE files"
 	@find . -type d \( -name '.idea' -o -name '.gradle' -o -name 'build' \) -exec rm -rf '{}' '+'
 	@find . -type f \( -name "*.ipr" -o -name "*.iws" -o -name "*.iml" \) -delete
+	@echo "clean docker images"
+	@docker image prune -f
+
+.PHONY: up
+up:
+	docker-compose -f docker-compose.yml up --force-recreate
+
+.PHONY: down
+down:
+	docker-compose -f docker-compose.yml down --remove-orphans

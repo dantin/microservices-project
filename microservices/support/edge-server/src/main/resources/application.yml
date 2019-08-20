@@ -1,3 +1,6 @@
+server:
+  port: 8765
+
 info:
   component: Zuul Server
 
@@ -36,17 +39,30 @@ security:
 
 eureka:
   client:
-    region: default
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 5
     service-url:
-      default-zone: http://user:${eureka.password}@127.0.0.1:8761/eureka/
+      defaultZone: http://user:${eureka.password}@127.0.0.1:8761/eureka/
   instance:
     instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
-    virtual-host-name: ${spring.application.name}
-
-server:
-  port: 8765
+  password: ${SECURITY_USER_PASSWORD:password}
 
 logging:
   level:
     ROOT: INFO
     org.springframework.web: INFO
+
+---
+# For development in Docker containers
+spring:
+  profiles: docker
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://user:${eureka.password}@discovery-server:8761/eureka/
