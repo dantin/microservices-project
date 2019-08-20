@@ -60,3 +60,11 @@ clean:
 	@find . -type f \( -name "*.ipr" -o -name "*.iws" -o -name "*.iml" \) -delete
 	@echo "clean docker images"
 	@docker image prune -f
+
+.PHONY: up
+up:
+	docker-compose -f docker-compose.yml up --force-recreate
+
+.PHONY: down
+down:
+	docker-compose -f docker-compose.yml down --remove-orphans
