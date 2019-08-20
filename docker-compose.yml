@@ -13,43 +13,30 @@ services:
     ports:
       - 9999:9999
     command: java -Dspring.profiles.active=docker -jar app.jar
-    links:
-      - "discovery-server"
     depends_on:
       - discovery-server
   product-service:
     restart: always
     image: dantin/product-service:latest
     command: java -Dspring.profiles.active=docker -jar app.jar
-    links:
-      - "discovery-server"
     depends_on:
       - discovery-server
   recommendation-service:
     restart: always
     image: dantin/recommendation-service:latest
     command: java -Dspring.profiles.active=docker -jar app.jar
-    links:
-      - "discovery-server"
     depends_on:
       - discovery-server
   review-service:
     restart: always
     image: dantin/review-service:latest
     command: java -Dspring.profiles.active=docker -jar app.jar
-    links:
-      - "discovery-server"
     depends_on:
       - discovery-server
   product-composite-service:
     restart: always
     image: dantin/product-composite-service:latest
     command: java -Dspring.profiles.active=docker -jar app.jar
-    links:
-      - "discovery-server"
-      - "product-service"
-      - "recommendation-service"
-      - "review-service"
     depends_on:
       - discovery-server
       - product-service
@@ -59,9 +46,6 @@ services:
     restart: always
     image: dantin/product-api-service:latest
     command: java -Dspring.profiles.active=docker -jar app.jar
-    links:
-      - "discovery-server"
-      - "product-composite-service"
     depends_on:
       - discovery-server
       - product-composite-service
@@ -71,11 +55,17 @@ services:
     command: java -Dspring.profiles.active=docker -jar app.jar
     ports:
       - 8765:8765
-    links:
-      - "discovery-server"
-      - "product-api-service"
-      - "auth-server"
     depends_on:
       - discovery-server
       - product-api-service
       - auth-server
+  monitor-dashboard:
+    restart: always
+    image: dantin/monitor-dashboard:latest
+    command: java -Dspring.profiles.active=docker -jar app.jar
+    ports:
+      - 7979:7979
+    depends_on:
+      - discovery-server
+      - product-composite-service
+      - product-api-service
