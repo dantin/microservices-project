@@ -20,12 +20,38 @@ management:
     enabled: false
 
 eureka:
-  instance:
-    lease-renewal-interval-in-seconds: 10
-    instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
   client:
+    register-with-eureka: true
+    fetch-registry: true
     registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://user:${eureka.password}@127.0.0.1:8761/eureka/
+  instance:
+    instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
+  password: ${SECURITY_USER_PASSWORD:password}
 
 logging:
   level:
     com.github.dantin: INFO
+
+---
+# For development in Docker containers
+spring:
+  profiles: docker
+server:
+  port: 8080
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://user:${eureka.password}@discovery-server:8761/eureka/
+security:
+  oauth2:
+    client:
+      access-token-uri: http://edge-server:${gateway-port}/api/auth/oauth/token
+      user-authorization-uri: http://edge-server:${gateway-port}/api/auth/oauth/authorize
+    resource:
+      user-info-uri: http://edge-server:${gateway-port}/api/auth/api/member
